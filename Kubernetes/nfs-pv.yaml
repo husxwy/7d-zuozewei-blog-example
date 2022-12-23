@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/bound-by-controller: "yes"
+  finalizers:
+  - kubernetes.io/pv-protection
+  labels:
+    app: 7d-pv
+  name: 7d-pv
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 200Gi
+  mountOptions:
+  - hard
+  - nfsvers=4.1
+  nfs:
+    path: /data/nfs/k8stest
+    server: 10.8.15.31
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+  storageClassName: "nfs-15-31-7d"

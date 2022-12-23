@@ -32,46 +32,51 @@ spec:
                 secretKeyRef:
                   key: mysql-root-password
                   name: mysql-min
-            - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: mysql-password
-                  name: mysql-min
-            - name: MYSQL_USER
-              value: apollo
-          image: centos/mysql-57-centos7:latest
+            # - name: MYSQL_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       key: mysql-password
+            #       name: mysql-min
+            # - name: MYSQL_USER
+            #   value: apollo
+          image: centos/mysql-57-centos7:5.7
           imagePullPolicy: IfNotPresent
+          # args: 
+          # - -c
+          # - sleep 99999
+          # command:
+          # - /bin/sh
           #kubelet 使用 liveness probe（存活探针）来确定何时重启容器。例如，当应用程序处于运行状态但无法做进一步操作，liveness 探针将捕获到 deadlock，重启处于该状态下的容器，使应用程序在存在 bug 的情况下依然能够继续运行下去
-          livenessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - "-c"
-                - MYSQL_PWD="${MYSQL_ROOT_PASSWORD}"
-                - mysql -h 127.0.0.1 -u root -e "SELECT 1"
-            failureThreshold: 3 #探测成功后，最少连续探测失败多少次才被认定为失败。默认是 3。最小值是 1。
-            initialDelaySeconds: 30 #容器启动后第一次执行探测是需要等待多少秒。
-            periodSeconds: 10 #执行探测的频率。默认是10秒，最小1秒。
-            successThreshold: 1 #探测失败后，最少连续探测成功多少次才被认定为成功。默认是 1。对于 liveness 必须是 1。最小值是 1。
-            timeoutSeconds: 5 #探测超时时间。默认1秒，最小1秒。
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - /bin/sh
+          #       - "-c"
+          #       - MYSQL_PWD="${MYSQL_ROOT_PASSWORD}"
+          #       - mysql -h 127.0.0.1 -u root -e "SELECT 1"
+          #   failureThreshold: 3 #探测成功后，最少连续探测失败多少次才被认定为失败。默认是 3。最小值是 1。
+          #   initialDelaySeconds: 30 #容器启动后第一次执行探测是需要等待多少秒。
+          #   periodSeconds: 10 #执行探测的频率。默认是10秒，最小1秒。
+          #   successThreshold: 1 #探测失败后，最少连续探测成功多少次才被认定为成功。默认是 1。对于 liveness 必须是 1。最小值是 1。
+          #   timeoutSeconds: 5 #探测超时时间。默认1秒，最小1秒。
           name: mysql-min
           ports:
             - containerPort: 3306
               name: mysql
               protocol: TCP
           #Kubelet 使用 readiness probe（就绪探针）来确定容器是否已经就绪可以接受流量。只有当 Pod 中的容器都处于就绪状态时 kubelet 才会认定该 Pod处于就绪状态。该信号的作用是控制哪些 Pod应该作为service的后端。如果 Pod 处于非就绪状态，那么它们将会被从 service 的 load balancer中移除。
-          readinessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - "-c"
-                - MYSQL_PWD="${MYSQL_ROOT_PASSWORD}"
-                - mysql -h 127.0.0.1 -u root -e "SELECT 1"
-            failureThreshold: 3
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
+          # readinessProbe:
+          #   exec:
+          #     command:
+          #       - /bin/sh
+          #       - "-c"
+          #       - MYSQL_PWD="${MYSQL_ROOT_PASSWORD}"
+          #       - mysql -h 127.0.0.1 -u root -e "SELECT 1"
+          #   failureThreshold: 3
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 10
+          #   successThreshold: 1
+          #   timeoutSeconds: 1
           resources:
             requests:
               cpu: 100m
@@ -84,9 +89,9 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: data
-            - name: mysql-config
-              mountPath: /etc/my.cnf.d/my.cnf
-              subPath: my.cnf
+            # - name: mysql-config
+            #   mountPath: /etc/my.cnf.d/my.cnf
+            #   subPath: my.cnf
             - name: localtime
               readOnly: true
               mountPath: /etc/localtime
@@ -106,8 +111,9 @@ spec:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
-            - mountPath: /var/lib/mysql
+            - mountPath: /var/lib/mysql/data
               name: data
+              subPath: data
       restartPolicy: Always
       #scheduler 是 kubernetes 的调度器，主要的任务是把定义的 pod 分配到集群的节点上。
       schedulerName: default-scheduler

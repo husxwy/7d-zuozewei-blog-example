@@ -4,29 +4,60 @@ metadata:
   name: mysql-config
 data:
   my.cnf: |
+    !includedir /etc/mysql/conf.d/
+    !includedir /etc/mysql/mysql.conf.d/
+    
     [mysqld]
-    default_storage_engine=innodb
-    skip_external_locking
-    lower_case_table_names=1
-    skip_host_cache
-    skip_name_resolve
+    ## 同一局域网内注意要唯一
+    server-id=001
+    ## 开启二进制日志功能，可以随便取（关键）
+    log-bin=mysql-bin
+    
+    gtid_mode=on
+    enforce_gtid_consistency=on
+    
+    relay-log=relay-log.log
+    binlog_format=ROW
+    #MySQL5.7可以不启用此参数，5.7版本使用了gtid_executed表记录同步复制的信息，避免两次写入relay-log和binlog，降低了从库磁盘I/O
+    #log_slave_updates=true
+    master_info_repository=TABLE
+    relay_log_info_repository=TABLE
+    sync_master_info=1
+    slave_parallel_workers=2
+    binlog_checksum=CRC32
+    master_verify_checksum=1
+    slave_sql_verify_checksum=1
+    binlog_rows_query_log_events=1
+    #replicate_do_db=tt
+    #MySQL5.7新增加的值，配置基于表的组提交并行复制，默认值为database（基于库进行多线程复制，MySQL5.6是基于库的方式进行多线程方式复制）建议改为logical_clock，基于表的组方式复制，提高复制的效率
+    slave_parallel_type=logical_clock
+    #开启通用查询日志
+    general_log=1
+    #设置通用日志的输出格式为文件和表
+    log_output=FILE,TABLE
+    # [mysqld]
+    # default_storage_engine=innodb
+    # skip_external_locking
+    # lower_case_table_names=1
+    # skip_host_cache
+    # skip_name_resolve
 
-    max_connections=2000
-    innodb_buffer_pool_size=8589934592
-    init_connect='SET collation_connection = utf8_unicode_ci'
-    init_connect='SET NAMES utf8'
-    character-set-server=utf8
-    collation-server=utf8_unicode_ci
-    skip-character-set-client-handshake
-    query_cache_type=0
-    innodb_flush_log_at_trx_commit = 0
-    sync_binlog = 0
-    query_cache_size = 104857600
-    slow_query_log =1
-    slow_query_log_file=/var/lib/mysql/slow-query.log
-    log-error=/var/lib/mysql/mysql.err
-    long_query_time = 0.02
-    table_open_cache_instances=16
-    table_open_cache = 6000
-    skip-grant-tables
-    sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+    # max_connections=2000
+    # innodb_buffer_pool_size=8589934592
+    # init_connect='SET collation_connection = utf8_unicode_ci'
+    # init_connect='SET NAMES utf8'
+    # character-set-server=utf8
+    # collation-server=utf8_unicode_ci
+    # skip-character-set-client-handshake
+    # query_cache_type=0
+    # innodb_flush_log_at_trx_commit = 0
+    # sync_binlog = 0
+    # query_cache_size = 104857600
+    # slow_query_log =1
+    # slow_query_log_file=/var/lib/mysql/slow-query.log
+    # log-error=/var/lib/mysql/mysql.err
+    # long_query_time = 0.02
+    # table_open_cache_instances=16
+    # table_open_cache = 6000
+    # # skip-grant-tables
+    # sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
