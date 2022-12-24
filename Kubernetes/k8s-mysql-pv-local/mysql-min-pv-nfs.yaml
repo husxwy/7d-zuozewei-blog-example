@@ -9,12 +9,12 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  storageClassName: mysql-min-storageclass-nfs
+  storageClassName: "mysql-min-storageclass-nfs"
   persistentVolumeReclaimPolicy: Retain
-  #存储采用nfs
   mountOptions:
   - hard
   - nfsvers=4.1
+  #存储采用nfs
   nfs:
     path: /data/nfs/k8stest/7d/mysql
     server: 10.8.15.31

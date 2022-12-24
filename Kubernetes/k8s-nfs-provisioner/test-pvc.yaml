@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: test-pvc
 spec:
-  storageClassName: nfs-storage #---需要与上面创建的 storageclass 的名称一致
+  storageClassName: managed-nfs-storage #---需要与上面创建的 storageclass 的名称一致
   accessModes:
     - ReadWriteOnce
   resources:

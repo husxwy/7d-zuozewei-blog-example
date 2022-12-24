@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: centos
+  name: centos
+  # namespace: husxtest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: centos
+  template:
+    metadata:
+      labels:
+        app: centos
+    spec:
+      containers:
+        - args:
+            - while true; do sleep 30; done;
+          command:
+            - /bin/bash
+            - '-c'
+            - '--'
+          # image: harbor.kefu.com/crcp/centos7-tools:7.9.2009.1
+          image: harbor.kefu.com/base/jenkins-agent-vue:2.277-centos7
+          imagePullPolicy: IfNotPresent
+          name: centos
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: nfs-pvc
+              mountPath: "/mnt"
+      # nodeSelector:
+      #   deploy: apps
+      # nodeSelector:
+      #   kubernetes.io/hostname: k8s-14-42
+      hostAliases:
+        - hostnames:
+          - harbor.kefu.com
+          ip: 10.8.14.48
+        - hostnames:
+          - git.rdc.i139.cn
+          ip: 10.8.18.101
+        - hostnames:
+          - uat.wangda.chinamobile.com
+          ip: 10.8.18.124
+      volumes:
+        - name: nfs-pvc
+          persistentVolumeClaim:
+            claimName: test-pvc
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: test-deploy
+# spec:
+#   selector:
+#     matchLabels:
+#       app: test-deploy
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         app: test-deploy
+#     spec:
+#       containers:
+#         - name: test-deploy
+#           image: busybox:latest
+#           command:
+#             - "/bin/sh"
+#           args:
+#             - "-c"
+#             - "touch /mnt/SUCCESS && exit 0 || exit 1" #创建一个名称为"SUCCESS"的文件
+#           volumeMounts:
+#             - name: nfs-pvc
+#               mountPath: "/mnt"
+#       volumes:
+#         - name: nfs-pvc
+#           persistentVolumeClaim:
+#             claimName: test-pvc
