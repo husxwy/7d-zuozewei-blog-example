@@ -19,18 +19,18 @@ spec:
       port: 9419
       targetPort: 9419
 ---
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: cloud-rabbitmq
-spec:
-  rules:
-    - host: cloud-rabbitmq.mall.demo.7d.com
-      http:
-        paths:
-          - backend:
-              serviceName: cloud-rabbitmq
-              servicePort: 15672
+# apiVersion: extensions/v1beta1
+# kind: Ingress
+# metadata:
+#   name: cloud-rabbitmq
+# spec:
+#   rules:
+#     - host: cloud-rabbitmq.mall.demo.7d.com
+#       http:
+#         paths:
+#           - backend:
+#               serviceName: cloud-rabbitmq
+#               servicePort: 15672
 ---
 ## Deployment
 apiVersion: apps/v1

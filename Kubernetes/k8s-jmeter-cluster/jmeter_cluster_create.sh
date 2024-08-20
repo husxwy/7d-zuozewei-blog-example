@@ -2,6 +2,8 @@
 #Create multiple Jmeter namespaces on an existing kuberntes cluster
 #Started On January 23, 2018
 
+# sh jmeter_cluster_create.sh 7d
+
 working_dir=`pwd`
 
 echo "checking if kubectl is present"
@@ -23,9 +25,8 @@ kubectl get namespaces | grep -v NAME | awk '{print $1}'
 
 echo
 
-echo "Enter the name of the new tenant unique name, this will be used to create the namespace"
-read tenant
-echo
+tenant="$1"
+[ -n "$tenant" ] || read -p 'Enter the name of the tenant unique name, if not exists, this will be used to create the namespace ' tenant
 
 #Check If namespace exists
 
@@ -33,22 +34,13 @@ kubectl get namespace $tenant > /dev/null 2>&1
 
 if [ $? -eq 0 ]
 then
-  echo "Namespace $tenant already exists, please select a unique name"
-  echo "Current list of namespaces on the kubernetes cluster"
-  sleep 2
-
- kubectl get namespaces | grep -v NAME | awk '{print $1}'
-  exit 1
+  echo "Namespace $tenant already exists, use $tenant"
+else
+  echo "Namespace $tenant not exists, create $tenant, use $tenant"
+  echo "Creating Namespace: $tenant"
+  kubectl create namespace $tenant
+  echo "Namspace $tenant has been created"
 fi
-
-echo
-echo "Creating Namespace: $tenant"
-
-kubectl create namespace $tenant
-
-echo "Namspace $tenant has been created"
-
-echo
 
 echo "Creating Jmeter slave nodes"
 

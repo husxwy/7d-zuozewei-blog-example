@@ -12,7 +12,7 @@ data:
   JVM_XMX: "2g" # 最大堆内存大小
   JVM_XMS: "2g" # 最初是堆内存大小
   JVM_XMN: "1g" # 堆内新生代的内存大小
-  MYSQL_SERVICE_HOST: "db-mysql-produce"  # 数据库地址（这里使用上面部署的 Mysql，由于部署在 K8S 里面，所以使用 Mysql Service 提供的 K8S 内部地址）
+  MYSQL_SERVICE_HOST: "mysql-min"  # 数据库地址（这里使用上面部署的 Mysql，由于部署在 K8S 里面，所以使用 Mysql Service 提供的 K8S 内部地址）
   MYSQL_SERVICE_DB_NAME: "nacos_config_cluster" # 指定使用的库名称
   MYSQL_SERVICE_PORT: "3306" # 数据库端口
   MYSQL_SERVICE_USER: "reader" # 数据库用户名

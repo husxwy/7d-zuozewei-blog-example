@@ -28,7 +28,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: nfs-client-provisioner
-    namespace: 7d  #替换成你要部署NFS Provisioner的 Namespace
+    namespace: husxtest  #替换成你要部署NFS Provisioner的 Namespace
 roleRef:
   kind: ClusterRole
   name: nfs-client-provisioner-runner
@@ -50,7 +50,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: nfs-client-provisioner
-    namespace: 7d  #替换成你要部署 NFS Provisioner 的 Namespace
+    namespace: husxtest  #替换成你要部署 NFS Provisioner 的 Namespace
 roleRef:
   kind: Role
   name: leader-locking-nfs-client-provisioner

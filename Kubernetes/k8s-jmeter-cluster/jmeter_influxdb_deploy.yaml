@@ -15,12 +15,14 @@ spec:
         app: influxdb-jmeter
     spec:
       containers:
-        - image: influxdb
+        - image: influxdb:1.8.6
           imagePullPolicy: IfNotPresent
           name: influxdb
           volumeMounts:
           - name: config-volume
             mountPath: /etc/influxdb
+          - name: data
+            mountPath: /var/lib/influxdb
           ports:
             - containerPort: 8083
               name: influx
@@ -32,3 +34,35 @@ spec:
       - name: config-volume
         configMap:
          name: influxdb-config
+      - name: data
+        persistentVolumeClaim:
+          claimName: influxdb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    k8s.kuboard.cn/workload: influxdb-jmeter
+  labels:
+    app: influxdb-jmeter
+  name: influxdb-jmeter
+spec:
+  ports:
+    - name: influx
+      nodePort: 31725
+      port: 8083
+      protocol: TCP
+      targetPort: 8083
+    - name: api
+      nodePort: 32036
+      port: 8086
+      protocol: TCP
+      targetPort: 8086
+    - name: graphite
+      nodePort: 31653
+      port: 2003
+      protocol: TCP
+      targetPort: 2003
+  selector:
+    app: influxdb-jmeter
+  type: NodePort

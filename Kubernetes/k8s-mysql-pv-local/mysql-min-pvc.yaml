@@ -11,7 +11,7 @@ items:
       app: mysql-min
       release: mysql-min
     name: mysql-min
-    namespace: default
+    # namespace: default
   spec:
     #PV 的访问模式（accessModes）有三种：
     #ReadWriteOnce（RWO）：是最基本的方式，可读可写，但只支持被单个 Pod 挂载。

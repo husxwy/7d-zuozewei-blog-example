@@ -8,7 +8,7 @@ metadata:
     app: mysql-min
     release: mysql-min
   name: mysql-min
-  namespace: default
+  # namespace: default
 spec:
   replicas: 1
   selector:

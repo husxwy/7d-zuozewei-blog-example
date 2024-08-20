@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-
+set -x
 working_dir=`pwd`
-
+echo $working_dir
 #Get namesapce variable
 tenant=`awk '{print $NF}' $working_dir/tenant_export`
-
+echo $tenant
 ## Create jmeter database automatically in Influxdb
 
 echo "Creating Influxdb jmeter Database"
@@ -13,6 +13,7 @@ echo "Creating Influxdb jmeter Database"
 ##influxdb_status=`kubectl get po -n $tenant | grep influxdb-jmeter | awk '{print $2}' | grep Running
 
 influxdb_pod=`kubectl get po -n $tenant | grep influxdb-jmeter | awk '{print $1}'`
+echo $influxdb_pod
 kubectl exec -ti -n $tenant $influxdb_pod -- influx -execute 'CREATE DATABASE jmeter'
 
 ## Create the influxdb datasource in Grafana

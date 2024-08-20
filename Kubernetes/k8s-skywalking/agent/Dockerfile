@@ -1,7 +1,10 @@
+# docker build -t  harbor.kefu.com/test/skywalking-agent:8.1.0 .
+# docker push harbor.kefu.com/test/skywalking-agent:8.1.0
 FROM alpine:3.8
 LABEL maintainer="zuozewei@hotmail.com"
-ENV SKYWALKING_VERSION=8.3.0
-ADD http://mirrors.tuna.tsinghua.edu.cn/apache/skywalking/${SKYWALKING_VERSION}/apache-skywalking-apm-${SKYWALKING_VERSION}.tar.gz /
+ENV SKYWALKING_VERSION=8.1.0
+# ADD http://mirrors.tuna.tsinghua.edu.cn/apache/skywalking/${SKYWALKING_VERSION}/apache-skywalking-apm-${SKYWALKING_VERSION}.tar.gz /
+ADD http://archive.apache.org/dist/skywalking/${SKYWALKING_VERSION}/apache-skywalking-apm-${SKYWALKING_VERSION}.tar.gz /
 RUN tar -zxvf /apache-skywalking-apm-${SKYWALKING_VERSION}.tar.gz && \
     mv apache-skywalking-apm-bin skywalking && \
     mv /skywalking/agent/optional-plugins/apm-trace-ignore-plugin* /skywalking/agent/plugins/ && \
